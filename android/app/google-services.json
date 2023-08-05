@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "305348507864",
+    "project_id": "geo-fence-seb",
+    "storage_bucket": "geo-fence-seb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305348507864:android:e2f47ab80dc6eb3634ffad",
+        "android_client_info": {
+          "package_name": "com.example.geofence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305348507864-bq3b4ahc22jo1t99a725h7rta2asts8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiM7rLWJCPF0G4SZcNJL4CljR3gAJE0F0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305348507864-bq3b4ahc22jo1t99a725h7rta2asts8i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "305348507864-bgj78lpqe4709rgkgk9uk2k8lfu30dep.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.geofence.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
