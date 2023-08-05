@@ -182,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget formCard() {
-    return new Container(
+    return Container(
       width: double.infinity,
       height: 260,
       decoration: BoxDecoration(
@@ -201,7 +201,6 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Padding(
         padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
         child: Form(
-          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -229,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) => value == null || value.isEmpty
                       ? 'Username can\'t be empty'
                       : null,
-                  onSaved: (value) => _username = value?.trim(),
+                  onSaved: (value) => {},
                 ),
               ),
               Container(
@@ -249,11 +248,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) => value == null || value.isEmpty
                       ? 'Password can\'t be empty'
                       : null,
-                  onChanged: (value) => _password = value,
+                  onChanged: (value) => {},
                 ),
               ),
               Text(
-                _errorMessage,
+                "error message",
                 style: TextStyle(color: Colors.red),
               ),
               Row(
@@ -273,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         (states) => Colors.blue,
                       ),
                     ),
-                    onPressed: () => _formKey.currentState?.reset(),
+                    onPressed: () => {},
                     child: Text(
                       "Reset",
                       style: TextStyle(
