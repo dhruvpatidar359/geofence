@@ -1,9 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geofence/models/user.dart';
+import 'package:geofence/pages/dashboard.dart';
 import 'package:geofence/pages/signup.dart';
+import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geofence/widgets/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class LoginPage extends StatelessWidget {
+  final _authService = FirebaseAuthService(authService: FirebaseAuth.instance);
+
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +87,7 @@ class LoginPage extends StatelessWidget {
                                         bottom: BorderSide(
                                             color: Colors.grey[200]!))),
                                 child: TextField(
+                                  controller: _emailController,
                                   decoration: InputDecoration(
                                       hintText: "Email or Phone number",
                                       hintStyle: TextStyle(color: Colors.grey),
@@ -88,6 +101,7 @@ class LoginPage extends StatelessWidget {
                                         bottom: BorderSide(
                                             color: Colors.grey[200]!))),
                                 child: TextField(
+                                  controller: _passwordController,
                                   decoration: InputDecoration(
                                       hintText: "Password",
                                       hintStyle: TextStyle(color: Colors.grey),
@@ -107,18 +121,49 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           height: 40,
                         ),
-                        Container(
-                          height: 50,
-                          margin: EdgeInsets.symmetric(horizontal: 50),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Colors.orange[900]),
-                          child: Center(
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () async {
+                            try {
+                              UserEntity user =
+                                  await _authService.signInWithEmailAndPassword(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              );
+
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs?.setBool("isLoggedIn", true);
+
+                              print(user.props);
+                              showTopSnackBar(
+                                Overlay.of(context),
+                                const CustomSnackBar.success(
+                                  message: "Logged in",
+                                ),
+                              );
+                              nextScreenReplace(context, DashBoard());
+                            } catch (e) {
+                              showTopSnackBar(
+                                Overlay.of(context),
+                                CustomSnackBar.info(
+                                  message: e.toString(),
+                                ),
+                              );
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            margin: EdgeInsets.symmetric(horizontal: 50),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.orange[900]),
+                            child: Center(
+                              child: Text(
+                                "Login",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                         ),

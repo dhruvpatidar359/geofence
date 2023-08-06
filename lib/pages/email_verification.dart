@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geofence/pages/dashboard.dart';
+import 'package:geofence/widgets/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   EmailVerificationScreen({Key? key}) : super(key: key);
@@ -33,8 +38,16 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
     if (isEmailVerified) {
       // TODO: implement your code after email verification
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
+      nextScreenReplace(context, DashBoard());
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.success(
+          message: "Verified Successfully",
+        ),
+      );
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs?.setBool("isLoggedIn", true);
 
       timer?.cancel();
     }
@@ -86,20 +99,31 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
               ),
               const SizedBox(height: 57),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: ElevatedButton(
-                  child: const Text('Resend'),
-                  onPressed: () {
-                    try {
-                      FirebaseAuth.instance.currentUser
-                          ?.sendEmailVerification();
-                    } catch (e) {
-                      debugPrint('$e');
-                    }
-                  },
+              GestureDetector(
+                onTap: () {
+                  try {
+                    FirebaseAuth.instance.currentUser?.sendEmailVerification();
+                  } catch (e) {
+                    debugPrint('$e');
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Colors.blue),
+                    child: const Center(
+                      child: Text(
+                        "Resend",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              )
             ],
           ),
         ),

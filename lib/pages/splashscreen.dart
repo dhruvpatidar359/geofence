@@ -1,10 +1,14 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
+import 'package:geofence/pages/dashboard.dart';
 import 'package:geofence/pages/login.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
-  SplashPage({Key? key}) : super(key: key);
+  SplashPage({Key? key, required this.isLoggedIn}) : super(key: key);
+
+  final isLoggedIn;
 
   @override
   _SplashPageState createState() => _SplashPageState();
@@ -25,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
       backgroundColor: Colors.white,
       showLoader: true,
       loadingText: Text("Loading..."),
-      navigator: LoginPage(),
+      navigator: widget.isLoggedIn ? DashBoard() : LoginPage(),
       durationInSeconds: 3,
     );
   }

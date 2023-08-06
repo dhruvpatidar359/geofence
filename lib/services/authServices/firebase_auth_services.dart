@@ -15,22 +15,12 @@ class FirebaseAuthService implements AuthService {
       return UserEntity.empty();
     }
 
-    var splittedName = ['Name ', 'LastName'];
-    if (user.displayName != null) {
-      splittedName = user.displayName!.split(' ');
-    }
-
     final map = <String, dynamic>{
       'id': user.uid,
-      'firstName': splittedName.first,
-      'lastName': splittedName.last,
+      'name': user.displayName ?? "",
       'email': user.email ?? '',
       'emailVerified': user.emailVerified,
       'imageUrl': user.photoURL ?? '',
-      'isAnonymous': user.isAnonymous,
-      'age': 0,
-      'phoneNumber': '',
-      'address': '',
     };
     return UserEntity.fromJson(map);
   }

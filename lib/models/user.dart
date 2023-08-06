@@ -3,40 +3,31 @@ import 'package:equatable/equatable.dart';
 class UserEntity extends Equatable {
   const UserEntity({
     required this.id,
-    required this.firstName,
-    required this.lastName,
     required this.email,
     required this.imageUrl,
+    required this.name,
   });
 
   final String id;
-  final String firstName;
-  final String lastName;
+  final String name;
   final String email;
   final String imageUrl;
 
   factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
         id: json['id'] ?? "",
-        firstName: json['firstName'] ?? "",
-        lastName: json['lastName'] ?? "",
+        name: json['name'] ?? "",
         email: json['email'] ?? "",
         imageUrl: json['imageUrl'] ?? "",
       );
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'id': id,
-        'firstName': firstName,
-        'lastName': lastName,
+        'name': name,
         'email': email,
         'imageUrl': imageUrl,
       };
-  factory UserEntity.empty() => const UserEntity(
-        id: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        imageUrl: "",
-      );
+  factory UserEntity.empty() =>
+      const UserEntity(id: "", email: "", imageUrl: "", name: "");
   @override
-  List<Object?> get props => [id, firstName, lastName, email, imageUrl];
+  List<Object?> get props => [id, name, email, imageUrl];
 }
