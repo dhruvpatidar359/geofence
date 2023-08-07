@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:geofence/models/user.dart';
 import 'package:geofence/services/authServices/auth_errors.dart';
 import 'package:geofence/services/authServices/auth_service.dart';
+import 'package:geofence/services/firebase/firebase_services.dart';
 
 class FirebaseAuthService implements AuthService {
   FirebaseAuthService({
@@ -9,6 +12,8 @@ class FirebaseAuthService implements AuthService {
   }) : _firebaseAuth = authService;
 
   final auth.FirebaseAuth _firebaseAuth;
+
+  FirebaseServices firebaseServices = FirebaseServices();
 
   UserEntity _mapFirebaseUser(auth.User? user) {
     if (user == null) {
@@ -48,10 +53,12 @@ class FirebaseAuthService implements AuthService {
     required String password,
   }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      firebaseServices.saveUser(email, email);
 
       return _mapFirebaseUser(_firebaseAuth.currentUser!);
     } on auth.FirebaseAuthException catch (e) {
@@ -81,6 +88,18 @@ class FirebaseAuthService implements AuthService {
       case 'ERROR_MISSING_GOOGLE_AUTH_TOKEN':
       default:
         return AuthError.error;
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    try {
+      _auth.signOut();
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

@@ -44,39 +44,39 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAYGS9vkxAfTK7qcmcOW8pjUG4fA0eUeVA',
-    appId: '1:305348507864:web:ebf7ff8e3e9da69834ffad',
-    messagingSenderId: '305348507864',
-    projectId: 'geo-fence-seb',
-    authDomain: 'geo-fence-seb.firebaseapp.com',
-    storageBucket: 'geo-fence-seb.appspot.com',
+    apiKey: 'AIzaSyBh-3W_ebeofi9Idamx04PRMa_eG5OWyKU',
+    appId: '1:207030088666:web:1c360209441121d6d6c6e3',
+    messagingSenderId: '207030088666',
+    projectId: 'geofencing-seb',
+    authDomain: 'geofencing-seb.firebaseapp.com',
+    storageBucket: 'geofencing-seb.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBiM7rLWJCPF0G4SZcNJL4CljR3gAJE0F0',
-    appId: '1:305348507864:android:e2f47ab80dc6eb3634ffad',
-    messagingSenderId: '305348507864',
-    projectId: 'geo-fence-seb',
-    storageBucket: 'geo-fence-seb.appspot.com',
+    apiKey: 'AIzaSyC6phfQFa6M7sJMuUW-t1GCeIPDP_dfqWo',
+    appId: '1:207030088666:android:855ae27f44502202d6c6e3',
+    messagingSenderId: '207030088666',
+    projectId: 'geofencing-seb',
+    storageBucket: 'geofencing-seb.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA1UYf8avHQovxmgWj9fqnasksZmfDErng',
-    appId: '1:305348507864:ios:2016e349b6e33bfa34ffad',
-    messagingSenderId: '305348507864',
-    projectId: 'geo-fence-seb',
-    storageBucket: 'geo-fence-seb.appspot.com',
-    iosClientId: '305348507864-g49jnh6k7c535j191m1orqoem3t5r41v.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA6E6v_F1JTDnBaAK_abC5qC_ukCZtKwTg',
+    appId: '1:207030088666:ios:6508895729f03c47d6c6e3',
+    messagingSenderId: '207030088666',
+    projectId: 'geofencing-seb',
+    storageBucket: 'geofencing-seb.appspot.com',
+    iosClientId: '207030088666-i5sf12uhh6tl730ga713dqm44lrjuorf.apps.googleusercontent.com',
     iosBundleId: 'com.example.geofence',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA1UYf8avHQovxmgWj9fqnasksZmfDErng',
-    appId: '1:305348507864:ios:27849010c7870b4a34ffad',
-    messagingSenderId: '305348507864',
-    projectId: 'geo-fence-seb',
-    storageBucket: 'geo-fence-seb.appspot.com',
-    iosClientId: '305348507864-bgj78lpqe4709rgkgk9uk2k8lfu30dep.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA6E6v_F1JTDnBaAK_abC5qC_ukCZtKwTg',
+    appId: '1:207030088666:ios:2c237c91aafc9962d6c6e3',
+    messagingSenderId: '207030088666',
+    projectId: 'geofencing-seb',
+    storageBucket: 'geofencing-seb.appspot.com',
+    iosClientId: '207030088666-ab3g6s0a6lpefuq8bfjdjtamf9521ckv.apps.googleusercontent.com',
     iosBundleId: 'com.example.geofence.RunnerTests',
   );
 }

@@ -1,45 +1,38 @@
 {
   "project_info": {
-    "project_number": "305348507864",
-    "project_id": "geo-fence-seb",
-    "storage_bucket": "geo-fence-seb.appspot.com"
+    "project_number": "207030088666",
+    "firebase_url": "https://geofencing-seb-default-rtdb.firebaseio.com",
+    "project_id": "geofencing-seb",
+    "storage_bucket": "geofencing-seb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:305348507864:android:e2f47ab80dc6eb3634ffad",
+        "mobilesdk_app_id": "1:207030088666:android:855ae27f44502202d6c6e3",
         "android_client_info": {
           "package_name": "com.example.geofence"
         }
       },
       "oauth_client": [
         {
-          "client_id": "305348507864-a4keu1j74v7j9tt8nu444top58ggnnjl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.geofence",
-            "certificate_hash": "9e0bd31bdd78e57b84a16d54bf445ed9fd9aef79"
-          }
-        },
-        {
-          "client_id": "305348507864-bq3b4ahc22jo1t99a725h7rta2asts8i.apps.googleusercontent.com",
+          "client_id": "207030088666-9somdfstluc4mp19ugp0h647pjthur1e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBiM7rLWJCPF0G4SZcNJL4CljR3gAJE0F0"
+          "current_key": "AIzaSyC6phfQFa6M7sJMuUW-t1GCeIPDP_dfqWo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "305348507864-bq3b4ahc22jo1t99a725h7rta2asts8i.apps.googleusercontent.com",
+              "client_id": "207030088666-9somdfstluc4mp19ugp0h647pjthur1e.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "305348507864-bgj78lpqe4709rgkgk9uk2k8lfu30dep.apps.googleusercontent.com",
+              "client_id": "207030088666-ab3g6s0a6lpefuq8bfjdjtamf9521ckv.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.geofence.RunnerTests"
