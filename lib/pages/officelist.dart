@@ -4,7 +4,6 @@ import 'package:geofence/widgets/geoCard.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class OfficeList extends StatefulWidget {
   OfficeList({Key? key}) : super(key: key);
 
@@ -15,13 +14,13 @@ class OfficeList extends StatefulWidget {
 class _OfficeListState extends State<OfficeList> {
   Position? currentPosition;
 
-  TextEditingController officeController = new TextEditingController();
+  TextEditingController officeController = TextEditingController();
 
-  TextEditingController latitudeController = new TextEditingController();
+  TextEditingController latitudeController = TextEditingController();
 
-  TextEditingController longitudeController = new TextEditingController();
+  TextEditingController longitudeController = TextEditingController();
 
-  TextEditingController radiusController = new TextEditingController();
+  TextEditingController radiusController = TextEditingController();
 
   FirebaseServices firebaseServices = FirebaseServices();
 
@@ -62,8 +61,14 @@ class _OfficeListState extends State<OfficeList> {
     return await Geolocator.getCurrentPosition();
   }
 
-  void getCurrentLocation() async{
-
+  void getCurrentLocation() async {
+    currentPosition = await determinePosition();
+    if (currentPosition != null) {
+      setState(() {
+        latitudeController.text = currentPosition!.latitude.toString();
+        longitudeController.text = currentPosition!.longitude.toString();
+      });
+    }
   }
 
   @override
@@ -78,85 +83,76 @@ class _OfficeListState extends State<OfficeList> {
                 return AlertDialog(
                   title: Text(
                     "Create Office",
-                    textAlign: TextAlign.left,
+                    textAlign: TextAlign.center,
                   ),
-                  content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            controller: officeController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                hintText: "office name..."),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          TextField(
-                            controller: latitudeController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                hintText: "latitude..."),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          TextField(
-                            controller: longitudeController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                hintText: "longitude..."),
-                          ),
-                          SizedBox(
-                          ),
-                          TextField(
-                            controller: radiusController,
-
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(5)),
-                                hintText: "Radius..."),
-                          ),
-                        ],
-                      ),
-                    );
-                  } ,)
-
-,
+                  content: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: officeController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5)),
+                                  hintText: "office name..."),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            TextField(
+                              controller: latitudeController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5)),
+                                  hintText: "latitude..."),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            TextField(
+                              controller: longitudeController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5)),
+                                  hintText: "longitude..."),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            TextField(
+                              controller: radiusController,
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5)),
+                                  hintText: "Radius..."),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
                   actions: [
                     IconButton(
                         onPressed: () async {
-                          // getCurrentLocation();
-                          currentPosition = await determinePosition();
-
-                          if(currentPosition != null){
-
-                            setState(() {
-                              //print(currentPosition!.latitude.toString());
-                              latitudeController =
-                                  TextEditingController(text: currentPosition!.latitude.toString());
-                              longitudeController =
-                                  TextEditingController(text: currentPosition!.longitude.toString());
-                            });
-                          }
-                        }, icon: Icon(Icons.location_history)),
-                    IconButton(onPressed: () {
-                      Navigator.pop(context);
-                    }, icon: Icon(Icons.close)),
+                          getCurrentLocation();
+                        },
+                        icon: Icon(Icons.location_history)),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close)),
                     IconButton(
                         onPressed: () {
                           firebaseServices.createOffice(
                               name: officeController.text,
                               latitude: double.parse(latitudeController.text),
                               longitude: double.parse(longitudeController.text),
-                              radius: double.parse(radiusController.text)
-                          );
+                              radius: double.parse(radiusController.text));
                         },
                         icon: Icon(Icons.check)),
                   ],
