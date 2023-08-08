@@ -17,9 +17,13 @@ class FirebaseServices {
   }
 
   Future<void> createOffice(
-      String name, double longitude, double latitude, double radius) async {
+      {required String name,
+      required double longitude,
+      required double latitude,
+      required double radius}) async {
     final offices = await officeRef.get();
 
+    print("i am wotrdagda");
     if (offices.value != null) {
       // Cast offices.value to Map<dynamic, dynamic>
       final officeData = offices.value as Map<dynamic, dynamic>;
@@ -30,6 +34,7 @@ class FirebaseServices {
         print('An office with the name "$name" already exists.');
         // You can choose to throw an exception or take other actions based on your requirements.
       } else {
+        print(" i am working");
         await officeRef.child(name).set({
           "name": name,
           "longitude": longitude,
@@ -38,6 +43,13 @@ class FirebaseServices {
         });
         print('Office "$name" created successfully.');
       }
+    } else {
+      await officeRef.child(name).set({
+        "name": name,
+        "longitude": longitude,
+        "latitude": latitude,
+        "radius": radius
+      });
     }
   }
 

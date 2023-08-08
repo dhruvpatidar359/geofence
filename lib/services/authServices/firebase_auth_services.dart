@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geofence/models/user.dart';
+import 'package:geofence/pages/email_verification.dart';
 import 'package:geofence/services/authServices/auth_errors.dart';
 import 'package:geofence/services/authServices/auth_service.dart';
 import 'package:geofence/services/firebase/firebase_services.dart';
+import 'package:geofence/widgets/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseAuthService implements AuthService {
   FirebaseAuthService({
@@ -48,46 +52,21 @@ class FirebaseAuthService implements AuthService {
   }
 
   @override
-  Future<UserEntity> createUserWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
+  Future<UserEntity> createUserWithEmailAndPassword(
+      {required String email,
+      required String password,
+      required String name}) async {
     try {
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      firebaseServices.saveUser(email, email);
+      firebaseServices.saveUser(name, email);
 
       return _mapFirebaseUser(_firebaseAuth.currentUser!);
     } on auth.FirebaseAuthException catch (e) {
       throw _determineError(e);
-    }
-  }
-
-  AuthError _determineError(auth.FirebaseAuthException exception) {
-    switch (exception.code) {
-      case 'invalid-email':
-        return AuthError.invalidEmail;
-      case 'user-disabled':
-        return AuthError.userDisabled;
-      case 'user-not-found':
-        return AuthError.userNotFound;
-      case 'wrong-password':
-        return AuthError.wrongPassword;
-      case 'email-already-in-use':
-      case 'account-exists-with-different-credential':
-        return AuthError.emailAlreadyInUse;
-      case 'invalid-credential':
-        return AuthError.invalidCredential;
-      case 'operation-not-allowed':
-        return AuthError.operationNotAllowed;
-      case 'weak-password':
-        return AuthError.weakPassword;
-      case 'ERROR_MISSING_GOOGLE_AUTH_TOKEN':
-      default:
-        return AuthError.error;
     }
   }
 
@@ -96,10 +75,37 @@ class FirebaseAuthService implements AuthService {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
       _auth.signOut();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs?.setBool("isLoggedIn", false);
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
+  }
+}
+
+AuthError _determineError(auth.FirebaseAuthException exception) {
+  switch (exception.code) {
+    case 'invalid-email':
+      return AuthError.invalidEmail;
+    case 'user-disabled':
+      return AuthError.userDisabled;
+    case 'user-not-found':
+      return AuthError.userNotFound;
+    case 'wrong-password':
+      return AuthError.wrongPassword;
+    case 'email-already-in-use':
+    case 'account-exists-with-different-credential':
+      return AuthError.emailAlreadyInUse;
+    case 'invalid-credential':
+      return AuthError.invalidCredential;
+    case 'operation-not-allowed':
+      return AuthError.operationNotAllowed;
+    case 'weak-password':
+      return AuthError.weakPassword;
+    case 'ERROR_MISSING_GOOGLE_AUTH_TOKEN':
+    default:
+      return AuthError.error;
   }
 }

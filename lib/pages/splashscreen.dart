@@ -1,5 +1,5 @@
 import 'package:easy_splash_screen/easy_splash_screen.dart';
-import 'package:geofence/pages/dashboard.dart';
+import 'package:geofence/pages/officelist.dart';
 import 'package:geofence/pages/login.dart';
 
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class _SplashPageState extends State<SplashPage> {
       backgroundColor: Colors.white,
       showLoader: true,
       loadingText: Text("Loading..."),
-      navigator: widget.isLoggedIn ? DashBoard() : LoginPage(),
+      navigator: widget.isLoggedIn ? OfficeList() : LoginPage(),
       durationInSeconds: 3,
     );
   }

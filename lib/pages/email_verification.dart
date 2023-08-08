@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geofence/pages/dashboard.dart';
+import 'package:geofence/pages/officelist.dart';
 import 'package:geofence/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -38,7 +38,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
     if (isEmailVerified) {
       // TODO: implement your code after email verification
-      nextScreenReplace(context, DashBoard());
+      nextScreenReplace(context, OfficeList());
       showTopSnackBar(
         Overlay.of(context),
         const CustomSnackBar.success(

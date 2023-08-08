@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geofence/pages/dashboard.dart';
 import 'package:geofence/pages/email_verification.dart';
 import 'package:geofence/pages/login.dart';
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
@@ -14,6 +13,7 @@ class SignUp extends StatelessWidget {
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,6 +106,20 @@ class SignUp extends StatelessWidget {
                                       border: InputBorder.none),
                                 ),
                               ),
+                              Container(
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.grey[200]!))),
+                                child: TextField(
+                                  controller: _nameController,
+                                  decoration: InputDecoration(
+                                      hintText: "Name",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -114,14 +128,34 @@ class SignUp extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () async {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Row(
+                                      children: [
+                                        CircularProgressIndicator(
+                                          color: Colors.orange[900]!,
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text("Loading")
+                                      ],
+                                    ),
+                                  );
+                                });
                             try {
                               await _authService.createUserWithEmailAndPassword(
                                 email: _emailController.text,
                                 password: _passwordController.text,
+                                name: _nameController.text,
                               );
+                              Navigator.of(context).pop();
                               nextScreenReplace(
                                   context, EmailVerificationScreen());
                             } catch (e) {
+                              Navigator.of(context).pop();
                               showTopSnackBar(
                                 Overlay.of(context),
                                 CustomSnackBar.info(

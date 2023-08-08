@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geofence/models/user.dart';
-import 'package:geofence/pages/dashboard.dart';
+import 'package:geofence/pages/email_verification.dart';
+import 'package:geofence/pages/officelist.dart';
 import 'package:geofence/pages/signup.dart';
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geofence/widgets/widgets.dart';
@@ -129,19 +130,22 @@ class LoginPage extends StatelessWidget {
                                 email: _emailController.text,
                                 password: _passwordController.text,
                               );
+                              if (user.emailVerified) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs?.setBool("isLoggedIn", true);
 
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs?.setBool("isLoggedIn", true);
-
-                              print(user.props);
-                              showTopSnackBar(
-                                Overlay.of(context),
-                                const CustomSnackBar.success(
-                                  message: "Logged in",
-                                ),
-                              );
-                              nextScreenReplace(context, DashBoard());
+                                showTopSnackBar(
+                                  Overlay.of(context),
+                                  const CustomSnackBar.success(
+                                    message: "Logged in",
+                                  ),
+                                );
+                                nextScreenReplace(context, OfficeList());
+                              } else {
+                                nextScreenReplace(
+                                    context, EmailVerificationScreen());
+                              }
                             } catch (e) {
                               showTopSnackBar(
                                 Overlay.of(context),

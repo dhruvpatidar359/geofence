@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:geofence/models/user.dart';
 
 abstract class AuthService {
@@ -9,6 +10,7 @@ abstract class AuthService {
   Future<UserEntity> createUserWithEmailAndPassword({
     required String email,
     required String password,
+    required String name,
   });
 
   Future<void> signOut() async {}
