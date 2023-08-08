@@ -138,7 +138,7 @@ class _OfficeListState extends State<OfficeList> {
                           if(currentPosition != null){
 
                             setState(() {
-                              print(currentPosition!.latitude.toString());
+                              //print(currentPosition!.latitude.toString());
                               latitudeController =
                                   TextEditingController(text: currentPosition!.latitude.toString());
                               longitudeController =
