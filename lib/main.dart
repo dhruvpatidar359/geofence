@@ -5,6 +5,7 @@ import 'package:geofence/firebase_options.dart';
 import 'package:geofence/pages/login.dart';
 import 'package:geofence/pages/signup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

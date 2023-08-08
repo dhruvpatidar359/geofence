@@ -1,17 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:geofence/services/firebase/firebase_services.dart';
 import 'package:geofence/widgets/geoCard.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OfficeList extends StatelessWidget {
+
+class OfficeList extends StatefulWidget {
   OfficeList({Key? key}) : super(key: key);
 
-  String officeName = "";
-  late double latitude;
-  late double longitude;
-  late double radius;
+  @override
+  State<OfficeList> createState() => _OfficeListState();
+}
+
+class _OfficeListState extends State<OfficeList> {
+  Position? currentPosition;
+
+  TextEditingController officeController = new TextEditingController();
+
+  TextEditingController latitudeController = new TextEditingController();
+
+  TextEditingController longitudeController = new TextEditingController();
+
+  TextEditingController radiusController = new TextEditingController();
 
   FirebaseServices firebaseServices = FirebaseServices();
+
+  Future<Position> determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
+
+  void getCurrentLocation() async{
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,72 +80,83 @@ class OfficeList extends StatelessWidget {
                     "Create Office",
                     textAlign: TextAlign.left,
                   ),
-                  content: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          onChanged: (value) {
-                            officeName = value;
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              hintText: "office name..."),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        TextField(
-                          onChanged: (value) {
-                            latitude = double.parse(value);
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              hintText: "latitude..."),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        TextField(
-                          onChanged: (value) {
-                            longitude = double.parse(value);
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              hintText: "longitude..."),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        TextField(
-                          onChanged: (value) {
-                            radius = double.parse(value);
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5)),
-                              hintText: "Radius..."),
-                        ),
-                      ],
-                    ),
-                  ),
+                  content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: officeController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                hintText: "office name..."),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: latitudeController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                hintText: "latitude..."),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            controller: longitudeController,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                hintText: "longitude..."),
+                          ),
+                          SizedBox(
+                          ),
+                          TextField(
+                            controller: radiusController,
+
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(5)),
+                                hintText: "Radius..."),
+                          ),
+                        ],
+                      ),
+                    );
+                  } ,)
+
+,
                   actions: [
                     IconButton(
-                        onPressed: () {}, icon: Icon(Icons.location_history)),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.close)),
+                        onPressed: () async {
+                          // getCurrentLocation();
+                          currentPosition = await determinePosition();
+
+                          if(currentPosition != null){
+
+                            setState(() {
+                              print(currentPosition!.latitude.toString());
+                              latitudeController =
+                                  TextEditingController(text: currentPosition!.latitude.toString());
+                              longitudeController =
+                                  TextEditingController(text: currentPosition!.longitude.toString());
+                            });
+                          }
+                        }, icon: Icon(Icons.location_history)),
+                    IconButton(onPressed: () {
+                      Navigator.pop(context);
+                    }, icon: Icon(Icons.close)),
                     IconButton(
                         onPressed: () {
-                          print(latitude);
-                          print("hehelkjrahg");
                           firebaseServices.createOffice(
-                              name: officeName,
-                              latitude: latitude,
-                              longitude: longitude,
-                              radius: radius);
+                              name: officeController.text,
+                              latitude: double.parse(latitudeController.text),
+                              longitude: double.parse(longitudeController.text),
+                              radius: double.parse(radiusController.text)
+                          );
                         },
                         icon: Icon(Icons.check)),
                   ],
