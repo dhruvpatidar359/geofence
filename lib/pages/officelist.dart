@@ -1,6 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:geofence/pages/google_map.dart';
 import 'package:geofence/services/firebase/firebase_services.dart';
 import 'package:geofence/widgets/geoCard.dart';
+import 'package:geofence/widgets/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,7 +16,9 @@ class OfficeList extends StatefulWidget {
 }
 
 class _OfficeListState extends State<OfficeList> {
+
   Position? currentPosition;
+  final officeReference = FirebaseDatabase.instance.ref('office');
 
   TextEditingController officeController = TextEditingController();
 
@@ -153,6 +159,7 @@ class _OfficeListState extends State<OfficeList> {
                               latitude: double.parse(latitudeController.text),
                               longitude: double.parse(longitudeController.text),
                               radius: double.parse(radiusController.text));
+                          Navigator.pop(context);
                         },
                         icon: Icon(Icons.check)),
                   ],
@@ -215,11 +222,21 @@ class _OfficeListState extends State<OfficeList> {
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
                 height: 200,
-                child: ListView.builder(
-                    itemCount: 10,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GeoCard();
-                    }),
+                child: FirebaseAnimatedList(
+                  query: officeReference,
+                  itemBuilder: (context, snapshot, animation, index) {
+                    String name = snapshot.child('name').value.toString();
+                    double latitude = double.parse(snapshot.child('latitude').value.toString());
+                    double longitude = double.parse(snapshot.child('longitude').value.toString());
+                    double radius = double.parse(snapshot.child('radius').value.toString());
+                    return GestureDetector(
+                      child: GeoCard(officeName: name),
+                      onTap: () {
+                        nextScreen(context, GoogleMapPage(latitudeCenter: latitude, longitudeCenter: longitude, radiusCenter: radius));
+                      },                      
+                    );
+                  },
+                ),
               ),
             ),
           ),

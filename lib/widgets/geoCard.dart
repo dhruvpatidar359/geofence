@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GeoCard extends StatelessWidget {
-  const GeoCard({Key? key}) : super(key: key);
+  final String officeName;
+  const GeoCard({Key? key, required this.officeName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class GeoCard extends StatelessWidget {
             size: 100,
           ),
           Text(
-            "Office",
+            officeName,
             style:
                 GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.w400),
           ),
