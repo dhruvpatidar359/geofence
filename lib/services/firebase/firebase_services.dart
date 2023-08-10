@@ -1,5 +1,5 @@
 import 'dart:ffi';
-
+import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -23,7 +23,6 @@ class FirebaseServices {
       required double radius}) async {
     final offices = await officeRef.get();
 
-    print("i am wotrdagda");
     if (offices.value != null) {
       // Cast offices.value to Map<dynamic, dynamic>
       final officeData = offices.value as Map<dynamic, dynamic>;
@@ -34,7 +33,6 @@ class FirebaseServices {
         print('An office with the name "$name" already exists.');
         // You can choose to throw an exception or take other actions based on your requirements.
       } else {
-        print(" i am working");
         await officeRef.child(name).set({
           "name": name,
           "longitude": longitude,
@@ -57,5 +55,26 @@ class FirebaseServices {
     await officeRef.child(name).remove();
   }
 
-  Future<void> markAttendance() async {}
+  Future<void> markAttendanceEntry(
+    {required String uId,
+    // required String userName
+    }) async {
+    final now = DateTime.now();
+    await attendanceRef.child(DateFormat('yMd').format(now)).child(uId).set({
+      // "name": userName,
+      "entry_time": DateFormat.Hm(now),
+      "exit_time": DateFormat.Hm(now),
+      "duration": "",
+    });
+  }
+
+  Future<void> markAttendanceExit(
+      { required String uId,
+        // required String userName
+      }) async {
+    final now = DateTime.now();
+    await attendanceRef.child(DateFormat('yMd').format(now)).child(uId).set({
+      "exit_time": DateFormat.Hm(now),
+    });
+  }
 }

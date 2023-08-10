@@ -1,10 +1,16 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence/pages/google_map.dart';
+import 'package:geofence/services/authServices/auth_service.dart';
+import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import '../services/firebase/firebase_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class GeoFence extends StatefulWidget {
 
@@ -22,6 +28,8 @@ class _GeoFenceState extends State<GeoFence> {
 
   int count = 0;
   StreamSubscription<Position>? _positionStream;
+  FirebaseServices firebaseServices = FirebaseServices();
+  DatabaseReference userRef = FirebaseDatabase.instance.ref("user");
 
   LocationSettings _locationSet = LocationSettings(
     accuracy: LocationAccuracy.bestForNavigation,
@@ -49,7 +57,7 @@ class _GeoFenceState extends State<GeoFence> {
         .pause(Future.delayed(Duration(seconds: eventPeriodInSeconds!)));
   }
 
-  void _checkGeofence(double distanceInMeters, double radiusInMeter) {
+  void _checkGeofence(double distanceInMeters, double radiusInMeter) async {
     if (distanceInMeters <= radiusInMeter) {
       print("Enter");
       if(count == 0){
@@ -59,11 +67,13 @@ class _GeoFenceState extends State<GeoFence> {
             message: "You have Entered the Location",
           ),
         );
+        firebaseServices.markAttendanceEntry(uId: FirebaseAuth.instance.currentUser!.uid);
         count=1;
       }
     } else {
       print("EXIT");
       if(count == 1){
+        firebaseServices.markAttendanceExit(uId: FirebaseAuth.instance.currentUser!.uid);
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.error(
