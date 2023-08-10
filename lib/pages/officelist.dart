@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:geofence/pages/google_map.dart';
+import 'package:geofence/pages/geo_fence.dart';
 import 'package:geofence/services/firebase/firebase_services.dart';
 import 'package:geofence/widgets/geoCard.dart';
 import 'package:geofence/widgets/widgets.dart';
@@ -232,7 +232,7 @@ class _OfficeListState extends State<OfficeList> {
                     return GestureDetector(
                       child: GeoCard(officeName: name),
                       onTap: () {
-                        nextScreen(context, GoogleMapPage(latitudeCenter: latitude, longitudeCenter: longitude, radiusCenter: radius));
+                        nextScreen(context, GeoFence(name: name, latitudeCenter: latitude, longitudeCenter: longitude, radiusCenter: radius));
                       },                      
                     );
                   },
