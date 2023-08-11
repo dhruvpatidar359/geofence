@@ -3,9 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:geofence/pages/login.dart';
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geofence/widgets/widgets.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   Profile({Key? key}) : super(key: key);
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+
+  DateTime today = DateTime.now();
   FirebaseAuthService _firebaseAuthService =
       FirebaseAuthService(authService: FirebaseAuth.instance);
 
@@ -13,57 +22,31 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Attendance'),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  _firebaseAuthService.signOut();
+                  nextScreenReplace(context, LoginPage());
+                },
+                icon: Icon(
+                  Icons.logout,
+                  size: 25,
+                ),
+            ),
+          ],
+        ),
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    _firebaseAuthService.signOut();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => LoginPage()),
-                    // );
-                    nextScreenReplace(context, LoginPage());
-                  },
-                  child: Container(
-                    height: 50,
-                    width: MediaQuery.sizeOf(context).width,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.grey[900]),
-                    child: Center(
-                      child: Text(
-                        "Logout",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    height: 50,
-                    width: MediaQuery.sizeOf(context).width,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.grey[900]),
-                    child: Center(
-                      child: Text(
-                        "View Attendance",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
+                padding: EdgeInsets.symmetric(horizontal: 5,vertical: 2),
+                child: TableCalendar(
+                    focusedDay: today,
+                    firstDay: DateTime.utc(2010,01,01),
+                    lastDay: DateTime.utc(2030,12,31),
                 ),
               ),
             ],
