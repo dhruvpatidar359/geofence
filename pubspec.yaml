@@ -49,6 +49,7 @@ dependencies:
   google_maps_flutter: ^2.4.0
   geofence_service: ^4.0.0
   intl: ^0.18.1
+  persistent_bottom_nav_bar: ^5.0.2
 
 dev_dependencies:
   flutter_test:

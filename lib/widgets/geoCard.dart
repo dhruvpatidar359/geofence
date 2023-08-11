@@ -9,21 +9,26 @@ class GeoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      color: Colors.white,
-      shadowColor: Colors.black,
-      child: Row(
-        children: [
-          Icon(
-            Icons.location_on_outlined,
-            color: Colors.red,
-            size: 100,
-          ),
-          Text(
-            officeName,
-            style:
-                GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.w400),
-          ),
-        ],
+      color: Colors.orange.shade50,
+      shadowColor: Colors.orange,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Image.asset(
+              "assets/images/location.png",
+              height: 60,
+              width: 60,
+            ),
+            SizedBox(
+              width: 30,
+            ),
+            Text(
+              officeName,
+              style: GoogleFonts.poppins(fontSize: 18),
+            ),
+          ],
+        ),
       ),
     );
   }

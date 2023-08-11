@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:geofence/pages/geo_fence.dart';
+import 'package:geofence/pages/profile.dart';
 import 'package:geofence/services/firebase/firebase_services.dart';
 import 'package:geofence/widgets/geoCard.dart';
 import 'package:geofence/widgets/widgets.dart';
@@ -16,7 +17,6 @@ class OfficeList extends StatefulWidget {
 }
 
 class _OfficeListState extends State<OfficeList> {
-
   Position? currentPosition;
   final officeReference = FirebaseDatabase.instance.ref('office');
 
@@ -29,6 +29,8 @@ class _OfficeListState extends State<OfficeList> {
   TextEditingController radiusController = TextEditingController();
 
   FirebaseServices firebaseServices = FirebaseServices();
+
+  int _selectedIndex = 0;
 
   Future<Position> determinePosition() async {
     bool serviceEnabled;
@@ -77,16 +79,44 @@ class _OfficeListState extends State<OfficeList> {
     }
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.black,
+                ),
+                label: 'Home',
+                backgroundColor: Colors.white),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.search, color: Colors.black),
+                label: 'Search',
+                backgroundColor: Colors.white),
+          ],
+          type: BottomNavigationBarType.shifting,
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.black,
+          iconSize: 40,
+          onTap: _onItemTapped,
+          elevation: 5),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange.shade100,
         onPressed: () {
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
+                  backgroundColor: Colors.orange.shade50,
                   title: Text(
                     "Create Office",
                     textAlign: TextAlign.center,
@@ -168,80 +198,49 @@ class _OfficeListState extends State<OfficeList> {
         },
         child: Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                height: 50,
-                width: MediaQuery.sizeOf(context).width,
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.grey[900]),
-                child: Center(
-                  child: Text(
-                    "Logout",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+      body: _selectedIndex == 1
+          ? Profile()
+          : Column(
+              children: [
+                Text(
+                  "Select GeoFence",
+                  style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w600, fontSize: 18),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 200,
+                      child: FirebaseAnimatedList(
+                        query: officeReference,
+                        itemBuilder: (context, snapshot, animation, index) {
+                          String name = snapshot.child('name').value.toString();
+                          double latitude = double.parse(
+                              snapshot.child('latitude').value.toString());
+                          double longitude = double.parse(
+                              snapshot.child('longitude').value.toString());
+                          double radius = double.parse(
+                              snapshot.child('radius').value.toString());
+                          return GestureDetector(
+                            child: GeoCard(officeName: name),
+                            onTap: () {
+                              nextScreen(
+                                  context,
+                                  GeoFence(
+                                      name: name,
+                                      latitudeCenter: latitude,
+                                      longitudeCenter: longitude,
+                                      radiusCenter: radius));
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {},
-              child: Container(
-                height: 50,
-                width: MediaQuery.sizeOf(context).width,
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.orange[900]),
-                child: Center(
-                  child: Text(
-                    "View Attendance",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Text(
-            "Select GeoFence",
-            style:
-                GoogleFonts.poppins(fontWeight: FontWeight.w400, fontSize: 18),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 200,
-                child: FirebaseAnimatedList(
-                  query: officeReference,
-                  itemBuilder: (context, snapshot, animation, index) {
-                    String name = snapshot.child('name').value.toString();
-                    double latitude = double.parse(snapshot.child('latitude').value.toString());
-                    double longitude = double.parse(snapshot.child('longitude').value.toString());
-                    double radius = double.parse(snapshot.child('radius').value.toString());
-                    return GestureDetector(
-                      child: GeoCard(officeName: name),
-                      onTap: () {
-                        nextScreen(context, GeoFence(name: name, latitudeCenter: latitude, longitudeCenter: longitude, radiusCenter: radius));
-                      },                      
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     ));
   }
 }

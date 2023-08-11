@@ -75,6 +75,7 @@ class FirebaseAuthService implements AuthService {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     try {
       _auth.signOut();
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs?.setBool("isLoggedIn", false);
     } catch (e) {

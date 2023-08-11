@@ -5,6 +5,7 @@ import 'package:geofence/models/user.dart';
 import 'package:geofence/pages/email_verification.dart';
 import 'package:geofence/pages/officelist.dart';
 import 'package:geofence/pages/signup.dart';
+
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geofence/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
