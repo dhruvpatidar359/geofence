@@ -11,21 +11,24 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../services/firebase/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
 class GeoFence extends StatefulWidget {
-
   final String name;
   final double latitudeCenter;
   final double longitudeCenter;
   final double radiusCenter;
-  const GeoFence({Key? key ,required this.name, required this.latitudeCenter, required this.longitudeCenter, required this.radiusCenter}) : super(key: key);
+  const GeoFence(
+      {Key? key,
+      required this.name,
+      required this.latitudeCenter,
+      required this.longitudeCenter,
+      required this.radiusCenter})
+      : super(key: key);
 
   @override
   State<GeoFence> createState() => _GeoFenceState();
 }
 
 class _GeoFenceState extends State<GeoFence> {
-
   int count = 0;
   StreamSubscription<Position>? _positionStream;
   FirebaseServices firebaseServices = FirebaseServices();
@@ -44,7 +47,7 @@ class _GeoFenceState extends State<GeoFence> {
     double radiusInMeter = widget.radiusCenter;
     int? eventPeriodInSeconds = 1;
 
-    if(_positionStream == null){
+    if (_positionStream == null) {
       _positionStream = Geolocator.getPositionStream(
         locationSettings: _locationSet,
       ).listen((Position position) {
@@ -60,20 +63,24 @@ class _GeoFenceState extends State<GeoFence> {
   void _checkGeofence(double distanceInMeters, double radiusInMeter) async {
     if (distanceInMeters <= radiusInMeter) {
       print("Enter");
-      if(count == 0){
+      if (count == 0) {
+        firebaseServices.markAttendanceEntry(
+            uId: FirebaseAuth.instance.currentUser!.uid);
+
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.success(
             message: "You have Entered the Location",
           ),
         );
-        firebaseServices.markAttendanceEntry(uId: FirebaseAuth.instance.currentUser!.uid);
-        count=1;
+
+        count = 1;
       }
     } else {
       print("EXIT");
-      if(count == 1){
-        firebaseServices.markAttendanceExit(uId: FirebaseAuth.instance.currentUser!.uid);
+      if (count == 1) {
+        firebaseServices.markAttendanceExit(
+            uId: FirebaseAuth.instance.currentUser!.uid);
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.error(
@@ -101,13 +108,11 @@ class _GeoFenceState extends State<GeoFence> {
     startGeofenceService();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GoogleMapPage(
         latitudeCenter: widget.latitudeCenter,
         longitudeCenter: widget.longitudeCenter,
-        radiusCenter: widget.radiusCenter
-    );
+        radiusCenter: widget.radiusCenter);
   }
 }

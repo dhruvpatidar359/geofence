@@ -55,26 +55,35 @@ class FirebaseServices {
     await officeRef.child(name).remove();
   }
 
-  Future<void> markAttendanceEntry(
-    {required String uId,
+  Future<void> markAttendanceEntry({
+    required String uId,
     // required String userName
-    }) async {
+  }) async {
     final now = DateTime.now();
-    await attendanceRef.child(DateFormat('yMd').format(now)).child(uId).set({
+    print(now);
+
+    String en_time = DateFormat.Hm().format(now); // Format the DateTime object
+    String ex_time = DateFormat.Hm().format(now); // Format the DateTime object
+
+    String d = DateFormat('yMd').format(now).toString().replaceAll("/", "-");
+
+    await attendanceRef.child(d).child(uId).set({
       // "name": userName,
-      "entry_time": DateFormat.Hm(now),
-      "exit_time": DateFormat.Hm(now),
+      "entry_time": en_time,
+      "exit_time": "",
       "duration": "",
     });
   }
 
-  Future<void> markAttendanceExit(
-      { required String uId,
-        // required String userName
-      }) async {
+  Future<void> markAttendanceExit({
+    required String uId,
+    // required String userName
+  }) async {
     final now = DateTime.now();
-    await attendanceRef.child(DateFormat('yMd').format(now)).child(uId).set({
-      "exit_time": DateFormat.Hm(now),
+    String ex_time = DateFormat.Hm().format(now);
+    String d = DateFormat('yMd').format(now).toString().replaceAll("/", "-");
+    await attendanceRef.child(d).child(uId).set({
+      "exit_time": ex_time,
     });
   }
 }
