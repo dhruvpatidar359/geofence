@@ -8,6 +8,8 @@ import 'package:geofence/widgets/geoCard.dart';
 import 'package:geofence/widgets/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_icons/line_icons.dart';
 
 class OfficeList extends StatefulWidget {
   OfficeList({Key? key}) : super(key: key);
@@ -89,26 +91,15 @@ class _OfficeListState extends State<OfficeList> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.black,
-                ),
-                label: 'Home',
-                backgroundColor: Colors.white),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search, color: Colors.black),
-                label: 'Search',
-                backgroundColor: Colors.white),
-          ],
-          type: BottomNavigationBarType.shifting,
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.black,
-          iconSize: 40,
-          onTap: _onItemTapped,
-          elevation: 5),
+      bottomNavigationBar: GNav(
+        onTabChange: _onItemTapped,
+        tabs: [
+          GButton(icon: Icons.home, text: 'Locations'),
+          GButton(icon: Icons.home, text: 'Locations'),
+          GButton(icon: Icons.home, text: 'Locations'),
+          GButton(icon: Icons.home, text: 'Locations'),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange.shade100,
         onPressed: () {
