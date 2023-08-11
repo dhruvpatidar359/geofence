@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-
 class GoogleMapPage extends StatefulWidget {
-
   final double latitudeCenter;
   final double longitudeCenter;
   final double radiusCenter;
-  const GoogleMapPage({Key? key , required this.latitudeCenter, required this.longitudeCenter , required this.radiusCenter}) : super(key: key);
+  const GoogleMapPage(
+      {Key? key,
+      required this.latitudeCenter,
+      required this.longitudeCenter,
+      required this.radiusCenter})
+      : super(key: key);
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-
   Position? position;
   Position? currentPosition;
   bool isReady = false;
@@ -35,7 +37,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   Future<Position> determinePosition() async {
-
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -72,56 +73,66 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     return await Geolocator.getCurrentPosition();
   }
 
-  void getCurrentLocation() async{
-    position =  await determinePosition();
-    if(position != null){
+  void getCurrentLocation() async {
+    position = await determinePosition();
+    if (position != null) {
       isReady = true;
       currentPosition = position;
       print("$position.longitude");
     }
-    if(isReady){
+    if (isReady) {
       setState(() {});
     }
 
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
-        locationSettings: locationSetting).listen(
-            (Position? positionNew) {
-          print(positionNew == null ? 'Unknown' : '${positionNew.latitude.toString()}, ${positionNew.longitude.toString()}');
-          if(position != null){
-            setState(() {
-              currentPosition = positionNew;
-            });
-          }
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSetting)
+            .listen((Position? positionNew) {
+      print(positionNew == null
+          ? 'Unknown'
+          : '${positionNew.latitude.toString()}, ${positionNew.longitude.toString()}');
+      if (position != null) {
+        setState(() {
+          currentPosition = positionNew;
         });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: !isReady ?
-        Container(
-          child: Center(child: CircularProgressIndicator(color: Colors.blue)),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-        )
-            : GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(currentPosition!.latitude, currentPosition!.longitude),
-            zoom: 20,
-          ),
-          markers: {
-            Marker(
-              markerId: MarkerId("Current Location") ,
-              position:LatLng(currentPosition!.latitude, currentPosition!.longitude),
+      body: !isReady
+          ? Container(
+              child:
+                  Center(child: CircularProgressIndicator(color: Colors.blue)),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+            )
+          : GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                    currentPosition!.latitude, currentPosition!.longitude),
+                zoom: 20,
+              ),
+              markers: {
+                Marker(
+                  markerId: MarkerId("Current Location"),
+                  position: LatLng(
+                      currentPosition!.latitude, currentPosition!.longitude),
+                ),
+              },
+              circles: Set.from(
+                [
+                  Circle(
+                    circleId: CircleId("Center"),
+                    center:
+                        LatLng(widget.latitudeCenter, widget.longitudeCenter),
+                    radius: widget.radiusCenter,
+                  )
+                ],
+              ),
+              compassEnabled: true,
             ),
-          },
-          circles: Set.from([Circle(
-            circleId:  CircleId("Center"),
-            center: LatLng(widget.latitudeCenter, widget.longitudeCenter),
-            radius: widget.radiusCenter,
-          )],),
-          compassEnabled: true,
-        ),
-      );
+    );
   }
 }

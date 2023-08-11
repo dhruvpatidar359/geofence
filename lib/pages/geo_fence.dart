@@ -112,9 +112,11 @@ class _GeoFenceState extends State<GeoFence> {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMapPage(
-        latitudeCenter: widget.latitudeCenter,
-        longitudeCenter: widget.longitudeCenter,
-        radiusCenter: widget.radiusCenter);
+    return SafeArea(
+      child: GoogleMapPage(
+          latitudeCenter: widget.latitudeCenter,
+          longitudeCenter: widget.longitudeCenter,
+          radiusCenter: widget.radiusCenter),
+    );
   }
 }
