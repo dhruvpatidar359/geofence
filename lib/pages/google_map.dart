@@ -128,7 +128,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                     center:
                         LatLng(widget.latitudeCenter, widget.longitudeCenter),
                     radius: widget.radiusCenter,
-                  )
+                    fillColor: Colors.blue.shade200.withOpacity(0.35),
+                    strokeColor: Colors.blue,
+                    strokeWidth: 5,
+                  ),
                 ],
               ),
               compassEnabled: true,
