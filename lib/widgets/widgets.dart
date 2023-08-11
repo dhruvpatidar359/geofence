@@ -15,7 +15,3 @@ void nextScreenReplace(context, page) {
         builder: (context) => page,
       ));
 }
-
-void pushAndRemoveUntil(context, page) {
-  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-}

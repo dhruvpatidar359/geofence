@@ -20,7 +20,14 @@ class Profile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    _firebaseAuthService.signOut();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => LoginPage()),
+                    // );
+                    nextScreenReplace(context, LoginPage());
+                  },
                   child: Container(
                     height: 50,
                     width: MediaQuery.sizeOf(context).width,
@@ -28,21 +35,11 @@ class Profile extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         color: Colors.grey[900]),
-                    child: GestureDetector(
-                      onTap: () {
-                        _firebaseAuthService.signOut();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
-                        // pushAndRemoveUntil(context, LoginPage());
-                      },
-                      child: Center(
-                        child: Text(
-                          "Logout",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
+                    child: Center(
+                      child: Text(
+                        "Logout",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

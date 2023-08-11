@@ -8,8 +8,9 @@ import 'package:geofence/widgets/geoCard.dart';
 import 'package:geofence/widgets/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+
 import 'package:line_icons/line_icons.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class OfficeList extends StatefulWidget {
   OfficeList({Key? key}) : super(key: key);
@@ -91,13 +92,27 @@ class _OfficeListState extends State<OfficeList> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      bottomNavigationBar: GNav(
-        onTabChange: _onItemTapped,
-        tabs: [
-          GButton(icon: Icons.home, text: 'Locations'),
-          GButton(icon: Icons.home, text: 'Locations'),
-          GButton(icon: Icons.home, text: 'Locations'),
-          GButton(icon: Icons.home, text: 'Locations'),
+      bottomNavigationBar: SalomonBottomBar(
+        currentIndex: _selectedIndex,
+        onTap: (i) => setState(() => _selectedIndex = i),
+        items: [
+          /// Home
+          SalomonBottomBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Locations"),
+            selectedColor: Colors.orange.shade900,
+          ),
+
+          /// Likes
+          SalomonBottomBarItem(
+            icon: Icon(Icons.person),
+            title: Text("Profile"),
+            selectedColor: Colors.orange.shade900,
+          ),
+
+          /// Search
+
+          /// Profile
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -193,6 +208,9 @@ class _OfficeListState extends State<OfficeList> {
           ? Profile()
           : Column(
               children: [
+                SizedBox(
+                  height: 10,
+                ),
                 Text(
                   "Select GeoFence",
                   style: GoogleFonts.poppins(
