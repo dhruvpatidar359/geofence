@@ -23,7 +23,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   LocationSettings locationSetting = LocationSettings(
     accuracy: LocationAccuracy.bestForNavigation,
-    distanceFilter: 5,
+    distanceFilter: 1,
     timeLimit: Duration(seconds: 10000),
   );
 

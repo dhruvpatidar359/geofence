@@ -36,7 +36,7 @@ class _GeoFenceState extends State<GeoFence> {
 
   LocationSettings _locationSet = LocationSettings(
     accuracy: LocationAccuracy.bestForNavigation,
-    distanceFilter: 5,
+    distanceFilter: 1,
     timeLimit: Duration(seconds: 10000),
   );
 
@@ -65,7 +65,9 @@ class _GeoFenceState extends State<GeoFence> {
       print("Enter");
       if (count == 0) {
         firebaseServices.markAttendanceEntry(
-            uId: FirebaseAuth.instance.currentUser!.uid);
+          uId: FirebaseAuth.instance.currentUser!.uid,
+          officeName: widget.name,
+        );
 
         showTopSnackBar(
           Overlay.of(context),

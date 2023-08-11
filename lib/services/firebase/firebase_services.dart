@@ -10,6 +10,8 @@ class FirebaseServices {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  int count = 0;
+
   Future<void> saveUser(String name, String email) async {
     await userRef
         .child(auth.currentUser!.uid)
@@ -57,18 +59,33 @@ class FirebaseServices {
 
   Future<void> markAttendanceEntry({
     required String uId,
-    // required String userName
+    required String officeName,
   }) async {
+    late String? userName;
+    final snapshot = await userRef.child('$uId').child('name').get();
+    if(snapshot.exists){
+      userName = snapshot.value.toString();
+    }
+    else{
+      userName = "";
+    }
     final now = DateTime.now();
     print(now);
 
     String en_time = DateFormat.Hm().format(now); // Format the DateTime object
-    String ex_time = DateFormat.Hm().format(now); // Format the DateTime object
+    // String ex_time = DateFormat.Hm().format(now); // Format the DateTime object
 
     String d = DateFormat('yMd').format(now).toString().replaceAll("/", "-");
 
-    await attendanceRef.child(d).child(uId).set({
-      // "name": userName,
+    final snapshotAttend = await attendanceRef.child('$d').child('$uId').get();
+    if(snapshotAttend.exists){
+      count = snapshotAttend.children.length;
+    }
+    print(count);
+
+    await attendanceRef.child(d).child(uId).child(count.toString()).set({
+      "name": userName,
+      "office_name": officeName,
       "entry_time": en_time,
       "exit_time": "",
       "duration": "",
@@ -82,8 +99,23 @@ class FirebaseServices {
     final now = DateTime.now();
     String ex_time = DateFormat.Hm().format(now);
     String d = DateFormat('yMd').format(now).toString().replaceAll("/", "-");
-    await attendanceRef.child(d).child(uId).set({
+    final snapshotAttend = await attendanceRef.child('$d').child('$uId').get();
+    final snapshorAttendTime = await attendanceRef.child('$d').child('$uId').child('$count').child('entry_time').get();
+    String inTime = "";
+    if(snapshotAttend.exists){
+      count = snapshotAttend.children.length -1;
+    }
+    if(snapshorAttendTime.exists){
+      inTime = snapshorAttendTime.value.toString();
+    }
+    print(inTime);
+    var format = DateFormat("HH:mm");
+    var one = format.parse(inTime);
+    var two = format.parse(ex_time);
+
+    await attendanceRef.child(d).child(uId).child(count.toString()).update({
       "exit_time": ex_time,
+      "duration": two.difference(one).toString(),
     });
   }
 }
