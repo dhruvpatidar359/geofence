@@ -132,15 +132,14 @@ class SignUp extends StatelessWidget {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
+                                    backgroundColor: Colors.orange.shade50,
                                     content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         CircularProgressIndicator(
                                           color: Colors.orange[900]!,
                                         ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text("Loading")
                                       ],
                                     ),
                                   );

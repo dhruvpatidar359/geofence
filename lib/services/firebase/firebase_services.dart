@@ -63,14 +63,13 @@ class FirebaseServices {
   }) async {
     late String? userName;
     final snapshot = await userRef.child('$uId').child('name').get();
-    if(snapshot.exists){
+    if (snapshot.exists) {
       userName = snapshot.value.toString();
-    }
-    else{
+    } else {
       userName = "";
     }
     final now = DateTime.now();
-    print(now);
+    // print(now);
 
     String en_time = DateFormat.Hm().format(now); // Format the DateTime object
     // String ex_time = DateFormat.Hm().format(now); // Format the DateTime object
@@ -78,7 +77,7 @@ class FirebaseServices {
     String d = DateFormat('yMd').format(now).toString().replaceAll("/", "-");
 
     final snapshotAttend = await attendanceRef.child('$d').child('$uId').get();
-    if(snapshotAttend.exists){
+    if (snapshotAttend.exists) {
       count = snapshotAttend.children.length;
     }
     print(count);
@@ -100,12 +99,17 @@ class FirebaseServices {
     String ex_time = DateFormat.Hm().format(now);
     String d = DateFormat('yMd').format(now).toString().replaceAll("/", "-");
     final snapshotAttend = await attendanceRef.child('$d').child('$uId').get();
-    final snapshorAttendTime = await attendanceRef.child('$d').child('$uId').child('$count').child('entry_time').get();
+    final snapshorAttendTime = await attendanceRef
+        .child('$d')
+        .child('$uId')
+        .child('$count')
+        .child('entry_time')
+        .get();
     String inTime = "";
-    if(snapshotAttend.exists){
-      count = snapshotAttend.children.length -1;
+    if (snapshotAttend.exists) {
+      count = snapshotAttend.children.length - 1;
     }
-    if(snapshorAttendTime.exists){
+    if (snapshorAttendTime.exists) {
       inTime = snapshorAttendTime.value.toString();
     }
     print(inTime);

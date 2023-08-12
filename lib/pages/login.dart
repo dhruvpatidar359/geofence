@@ -125,6 +125,23 @@ class LoginPage extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () async {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.orange.shade50,
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CircularProgressIndicator(
+                                          color: Colors.orange[900]!,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+
                             try {
                               UserEntity user =
                                   await _authService.signInWithEmailAndPassword(
@@ -142,12 +159,15 @@ class LoginPage extends StatelessWidget {
                                     message: "Logged in",
                                   ),
                                 );
+                                Navigator.of(context).pop();
                                 nextScreenReplace(context, OfficeList());
                               } else {
+                                Navigator.of(context).pop();
                                 nextScreenReplace(
                                     context, EmailVerificationScreen());
                               }
                             } catch (e) {
+                              Navigator.of(context).pop();
                               showTopSnackBar(
                                 Overlay.of(context),
                                 CustomSnackBar.info(
