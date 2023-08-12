@@ -119,4 +119,9 @@ class _GeoFenceState extends State<GeoFence> {
           radiusCenter: widget.radiusCenter),
     );
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 }

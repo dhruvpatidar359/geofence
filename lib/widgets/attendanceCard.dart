@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AttendanceCard extends StatelessWidget {
+class AttendanceCard extends StatefulWidget {
   const AttendanceCard({
     Key? key,
     required this.inTime,
@@ -10,11 +10,16 @@ class AttendanceCard extends StatelessWidget {
     required this.location,
   }) : super(key: key);
 
-  final inTime;
-  final outTime;
-  final duration;
-  final location;
+  final String inTime;
+  final String outTime;
+  final String duration;
+  final String location;
 
+  @override
+  State<AttendanceCard> createState() => _AttendanceCardState();
+}
+
+class _AttendanceCardState extends State<AttendanceCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -29,28 +34,28 @@ class AttendanceCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                "inTime : $inTime",
+                "inTime : ${widget.inTime}",
                 style: GoogleFonts.poppins(fontSize: 12),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                "outTime : $outTime",
+                "outTime : ${widget.outTime}",
                 style: GoogleFonts.poppins(fontSize: 12),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                "duration : $duration",
+                "duration : ${widget.duration}",
                 style: GoogleFonts.poppins(fontSize: 12),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(2.0),
               child: Text(
-                "name : $location",
+                "name : ${widget.location}",
                 style: GoogleFonts.poppins(fontSize: 12),
               ),
             ),
