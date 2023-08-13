@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geofence/pages/admin_calender.dart';
 import 'package:geofence/pages/login.dart';
 import 'package:geofence/pages/signup.dart';
 
@@ -131,7 +132,7 @@ class AdminLogin extends StatelessWidget {
                               final valid = await _firebaseAuthService
                                   .checkPassAdmin(_passwordController.text);
                               if (valid) {
-                                nextScreenReplace(context, LoginPage());
+                                nextScreen(context, AdminCalender());
                                 showTopSnackBar(
                                   Overlay.of(context),
                                   const CustomSnackBar.success(
