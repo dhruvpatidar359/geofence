@@ -54,9 +54,13 @@ dependencies:
   line_icons: ^2.0.3
   syncfusion_flutter_datepicker: ^22.2.8
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
