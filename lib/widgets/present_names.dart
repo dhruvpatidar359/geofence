@@ -5,9 +5,11 @@ class AttendanceName extends StatefulWidget {
   const AttendanceName({
     Key? key,
     required this.userName,
+    required this.officeName,
   }) : super(key: key);
 
   final String userName;
+  final String officeName;
 
   @override
   State<AttendanceName> createState() => _AttendanceNameState();
@@ -24,11 +26,27 @@ class _AttendanceNameState extends State<AttendanceName> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(
-          child: Text(
-            widget.userName,
-            style: TextStyle(
-              fontSize: 15,
-            ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  'Name: ${widget.userName}',
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  'Office Name: ${widget.officeName}',
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

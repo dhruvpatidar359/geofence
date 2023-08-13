@@ -15,3 +15,4 @@ void nextScreenReplace(context, page) {
         builder: (context) => page,
       ));
 }
+

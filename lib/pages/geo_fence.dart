@@ -10,6 +10,8 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../services/firebase/firebase_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../widgets/widgets.dart';
+
 
 class GeoFence extends StatefulWidget {
   final String name;
@@ -29,7 +31,9 @@ class GeoFence extends StatefulWidget {
 }
 
 class _GeoFenceState extends State<GeoFence> {
+
   int count = 0;
+
   StreamSubscription<Position>? _positionStream;
   FirebaseServices firebaseServices = FirebaseServices();
   DatabaseReference userRef = FirebaseDatabase.instance.ref("user");
