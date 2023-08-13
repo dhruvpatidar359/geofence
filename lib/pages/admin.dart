@@ -1,21 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geofence/pages/admin.dart';
-import 'package:geofence/pages/email_verification.dart';
+import 'package:flutter/services.dart';
 import 'package:geofence/pages/login.dart';
+import 'package:geofence/pages/signup.dart';
+
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geofence/widgets/widgets.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class SignUp extends StatelessWidget {
-  SignUp({Key? key}) : super(key: key);
+class AdminLogin extends StatelessWidget {
   final _authService = FirebaseAuthService(authService: FirebaseAuth.instance);
 
-  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
+  FirebaseAuthService _firebaseAuthService =
+      FirebaseAuthService(authService: FirebaseAuth.instance);
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -38,14 +39,14 @@ class SignUp extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Sign Up",
+                    "Admin Login",
                     style: TextStyle(color: Colors.white, fontSize: 40),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "Welcome",
+                    "Welcome Back Admin",
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ],
@@ -86,37 +87,9 @@ class SignUp extends StatelessWidget {
                                         bottom: BorderSide(
                                             color: Colors.grey[200]!))),
                                 child: TextField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                      hintText: "Email or Phone number",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey[200]!))),
-                                child: TextField(
                                   controller: _passwordController,
                                   decoration: InputDecoration(
-                                      hintText: "Password",
-                                      hintStyle: TextStyle(color: Colors.grey),
-                                      border: InputBorder.none),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Colors.grey[200]!))),
-                                child: TextField(
-                                  controller: _nameController,
-                                  decoration: InputDecoration(
-                                      hintText: "Name",
+                                      hintText: "Password For Admin",
                                       hintStyle: TextStyle(color: Colors.grey),
                                       border: InputBorder.none),
                                 ),
@@ -127,55 +100,66 @@ class SignUp extends StatelessWidget {
                         SizedBox(
                           height: 40,
                         ),
+                        Text(
+                          "Forgot Password?",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
                         GestureDetector(
                           onTap: () async {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.orange.shade50,
-                                    content: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(
-                                          color: Colors.orange[900]!,
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                });
-                            try {
-                              await _authService.createUserWithEmailAndPassword(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                name: _nameController.text,
-                              );
-                              Navigator.of(context).pop();
-                              nextScreenReplace(
-                                  context, EmailVerificationScreen());
-                            } catch (e) {
-                              Navigator.of(context).pop();
-                              showTopSnackBar(
-                                Overlay.of(context),
-                                CustomSnackBar.info(
-                                  message: e.toString(),
-                                ),
-                              );
-                            }
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext context) {
+                            //       return AlertDialog(
+                            //         backgroundColor: Colors.orange.shade50,
+                            //         content: Row(
+                            //           mainAxisAlignment:
+                            //           MainAxisAlignment.center,
+                            //           children: [
+                            //             CircularProgressIndicator(
+                            //               color: Colors.orange[900]!,
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     });
                           },
-                          child: Container(
-                            height: 50,
-                            margin: EdgeInsets.symmetric(horizontal: 50),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Colors.orange[900]),
-                            child: Center(
-                              child: Text(
-                                "Sign Up",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                          child: GestureDetector(
+                            onTap: () async {
+                              final valid = await _firebaseAuthService
+                                  .checkPassAdmin(_passwordController.text);
+                              if (valid) {
+                                nextScreenReplace(context, LoginPage());
+                                showTopSnackBar(
+                                  Overlay.of(context),
+                                  const CustomSnackBar.success(
+                                    message: "Logged in as Admin",
+                                  ),
+                                );
+                              } else {
+                                showTopSnackBar(
+                                  Overlay.of(context),
+                                  const CustomSnackBar.success(
+                                    message: "Wrong password",
+                                  ),
+                                );
+                              }
+                            },
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.symmetric(horizontal: 50),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.orange[900]),
+                              child: const Center(
+                                child: Text(
+                                  "Admin Login",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           ),
@@ -195,7 +179,7 @@ class SignUp extends StatelessWidget {
                             Expanded(
                                 child: GestureDetector(
                               onTap: () {
-                                nextScreenReplace(context, AdminLogin());
+                                nextScreenReplace(context, LoginPage());
                               },
                               child: Container(
                                 height: 50,
@@ -204,7 +188,7 @@ class SignUp extends StatelessWidget {
                                     color: Colors.blue),
                                 child: Center(
                                   child: Text(
-                                    "Admin Login",
+                                    "User Login",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -218,7 +202,7 @@ class SignUp extends StatelessWidget {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  nextScreenReplace(context, LoginPage());
+                                  nextScreenReplace(context, SignUp());
                                 },
                                 child: Container(
                                   height: 50,
@@ -227,7 +211,7 @@ class SignUp extends StatelessWidget {
                                       color: Colors.black),
                                   child: Center(
                                     child: Text(
-                                      "Login",
+                                      "User Sign Up",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold),
