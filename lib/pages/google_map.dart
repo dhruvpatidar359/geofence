@@ -90,11 +90,17 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       print(positionNew == null
           ? 'Unknown'
           : '${positionNew.latitude.toString()}, ${positionNew.longitude.toString()}');
-      if (position != null) {
-        setState(() {
-          currentPosition = positionNew;
-        });
-      }
+      // if (position != null && mounted) {
+      //   setState(() {
+      //     currentPosition = positionNew;
+      //   });
+      try {
+        if (position != null) {
+          setState(() {
+            currentPosition = positionNew;
+          });
+        }
+      } catch (e) {}
     });
   }
 

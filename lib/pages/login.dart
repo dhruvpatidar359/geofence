@@ -117,13 +117,6 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           height: 40,
                         ),
-                        Text(
-                          "Forgot Password?",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
                         GestureDetector(
                           onTap: () async {
                             showDialog(

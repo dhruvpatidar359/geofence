@@ -50,7 +50,6 @@ dependencies:
   geofence_service: ^4.0.0
   intl: ^0.18.1
   table_calendar: ^3.0.9
-
   salomon_bottom_bar: ^3.3.2
   line_icons: ^2.0.3
   syncfusion_flutter_datepicker: ^22.2.8
@@ -81,6 +80,7 @@ flutter:
   assets:
      - assets/images/
      - assets/
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
