@@ -1,31 +1,30 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/material.dart';
 import 'package:geofence/pages/login.dart';
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geofence/widgets/attendanceCard.dart';
+import 'package:geofence/widgets/present_names.dart';
 import 'package:geofence/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class Profile extends StatefulWidget {
-  Profile({Key? key}) : super(key: key);
+
+class AdminCalender extends StatefulWidget {
+  const AdminCalender({Key? key}) : super(key: key);
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<AdminCalender> createState() => _AdminCalenderState();
 }
 
-class _ProfileState extends State<Profile> {
-  bool isEmpty = true;
-  DateTime today = DateTime.now();
-  FirebaseAuthService _firebaseAuthService = FirebaseAuthService(authService: FirebaseAuth.instance);
-
-  String userId = FirebaseAuth.instance.currentUser!.uid.toString();
-
-  DatabaseReference attendanceRef = FirebaseDatabase.instance.ref("attendance");
+class _AdminCalenderState extends State<AdminCalender> {
 
   String date_Control = DateFormat('yMd').format(DateTime.now()).toString().replaceAll("/", "-");
+  FirebaseAuthService _firebaseAuthService = FirebaseAuthService(authService: FirebaseAuth.instance);
+  DatabaseReference attendanceRef = FirebaseDatabase.instance.ref("attendance");
+
+  bool isEmpty = true;
   late Query _query ;
   Key _key = Key('New Key');
 
@@ -39,21 +38,14 @@ class _ProfileState extends State<Profile> {
     }
     setState(() {
       date_Control = "${inprocess[1]}-${inprocess[2]}-${inprocess[0]}";
-      _query = attendanceRef.child(date_Control).child(userId);
+      _query = attendanceRef.child(date_Control);
       _key = Key(date_Control);
-      print(_query.path);
     });
-    isAbsent();
-    print(date_Control);
-    print(userId);
+    noClass();
   }
 
-  getQuery() {
-    _query = attendanceRef.child(date_Control).child(userId);
-  }
-
-  isAbsent() async{
-    final snapshot = await attendanceRef.child(date_Control).child(userId).get();
+  noClass() async{
+    final snapshot = await attendanceRef.child(date_Control).get();
     if(snapshot.exists){
       setState(() {
         isEmpty = false;
@@ -66,12 +58,10 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getQuery();
+  getQuery() {
+    _query = attendanceRef.child(date_Control);
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -118,7 +108,7 @@ class _ProfileState extends State<Profile> {
           shadowColor: Colors.orange,
           child: Center(
             child: Text(
-              'ABSENT',
+              'No Class',
               style: TextStyle(
                 fontSize: 15,
               ),
@@ -131,20 +121,8 @@ class _ProfileState extends State<Profile> {
         query: _query,
         key: _key,
         itemBuilder: (context, snapshot, animation, index) {
-          String inTime =
-          snapshot.child('entry_time').value.toString();
-          String outTime =
-          snapshot.child('exit_time').value.toString();
-          String duration =
-          snapshot.child('duration').value.toString();
-          String location =
-          snapshot.child('office_name').value.toString();
-          return AttendanceCard(
-            inTime: inTime,
-            outTime: outTime,
-            duration: duration,
-            location: location,
-          );
+          String userId = snapshot.value.toString();
+          return AttendanceName(userName: userId);
         },
       ),
     );
