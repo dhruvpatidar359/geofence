@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geofence/models/user.dart';
@@ -18,6 +19,7 @@ class FirebaseAuthService implements AuthService {
   final auth.FirebaseAuth _firebaseAuth;
 
   FirebaseServices firebaseServices = FirebaseServices();
+  DatabaseReference _adminRef = FirebaseDatabase.instance.ref("admin");
 
   UserEntity _mapFirebaseUser(auth.User? user) {
     if (user == null) {
@@ -82,6 +84,16 @@ class FirebaseAuthService implements AuthService {
       if (kDebugMode) {
         print(e);
       }
+    }
+  }
+
+  Future<bool> checkPassAdmin(String pass) async {
+    DataSnapshot snapshot = await _adminRef.get();
+    final password = snapshot.value.toString();
+    if (pass == password) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

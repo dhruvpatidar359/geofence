@@ -28,6 +28,7 @@ class _SplashPageState extends State<SplashPage> {
         ),
       ),
       backgroundColor: Colors.white,
+      loaderColor: Colors.orange[900]!,
       showLoader: true,
       loadingText: Text("Loading..."),
       navigator: widget.isLoggedIn ? OfficeList() : LoginPage(),

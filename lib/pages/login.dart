@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geofence/models/user.dart';
+import 'package:geofence/pages/admin.dart';
 import 'package:geofence/pages/email_verification.dart';
 import 'package:geofence/pages/officelist.dart';
 import 'package:geofence/pages/signup.dart';
@@ -205,17 +206,22 @@ class LoginPage extends StatelessWidget {
                         Row(
                           children: [
                             Expanded(
-                                child: Container(
-                              height: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Colors.blue),
-                              child: Center(
-                                child: Text(
-                                  "Google",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                child: GestureDetector(
+                              onTap: () {
+                                nextScreenReplace(context, AdminLogin());
+                              },
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.blue),
+                                child: Center(
+                                  child: Text(
+                                    "Admin Login",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ),
                             )),
