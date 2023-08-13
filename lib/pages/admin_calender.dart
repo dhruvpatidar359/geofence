@@ -270,15 +270,7 @@ class _AdminCalenderState extends State<AdminCalender> {
             ),
           ))
         : Expanded(
-            child: FirebaseAnimatedList(
-              query: _query,
-              key: _key,
-              itemBuilder: (context, snapshot, animation, index) {
-                String userId = snapshot.value.toString();
-                return AttendanceName(userName: userId);
-              },
-            ),
-          );
+
       child: FirebaseAnimatedList(
         query: _query,
         key: _key,
