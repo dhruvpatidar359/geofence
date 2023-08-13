@@ -6,6 +6,7 @@ import 'package:geofence/pages/google_map.dart';
 import 'package:geofence/services/authServices/auth_service.dart';
 import 'package:geofence/services/authServices/firebase_auth_services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../services/firebase/firebase_services.dart';
@@ -29,10 +30,10 @@ class GeoFence extends StatefulWidget {
 }
 
 class _GeoFenceState extends State<GeoFence> {
-  int count = 0;
   StreamSubscription<Position>? _positionStream;
   FirebaseServices firebaseServices = FirebaseServices();
   DatabaseReference userRef = FirebaseDatabase.instance.ref("user");
+  late SharedPreferences prefs;
 
   LocationSettings _locationSet = LocationSettings(
     accuracy: LocationAccuracy.bestForNavigation,
@@ -53,7 +54,9 @@ class _GeoFenceState extends State<GeoFence> {
       ).listen((Position position) {
         double distanceInMeters = Geolocator.distanceBetween(
             latitude, longitude, position.latitude, position.longitude);
-        _checkGeofence(distanceInMeters, radiusInMeter);
+        try {
+          _checkGeofence(distanceInMeters, radiusInMeter);
+        } catch (e) {}
       });
     }
     _positionStream!
@@ -63,7 +66,11 @@ class _GeoFenceState extends State<GeoFence> {
   void _checkGeofence(double distanceInMeters, double radiusInMeter) async {
     if (distanceInMeters <= radiusInMeter) {
       print("Enter");
-      if (count == 0) {
+
+      if (prefs.getInt('count') == 0) {
+        // print(prefs.getInt('count'));
+
+        prefs.setInt('count', 1);
         firebaseServices.markAttendanceEntry(
           uId: FirebaseAuth.instance.currentUser!.uid,
           officeName: widget.name,
@@ -75,12 +82,11 @@ class _GeoFenceState extends State<GeoFence> {
             message: "You have Entered the Location",
           ),
         );
-
-        count = 1;
       }
     } else {
       print("EXIT");
-      if (count == 1) {
+      if (prefs.getInt('count') == 1) {
+        prefs.setInt('count', 0);
         firebaseServices.markAttendanceExit(
             uId: FirebaseAuth.instance.currentUser!.uid);
         showTopSnackBar(
@@ -89,7 +95,6 @@ class _GeoFenceState extends State<GeoFence> {
             message: "You are outside the Location",
           ),
         );
-        count = 0;
       }
     }
   }
@@ -103,11 +108,16 @@ class _GeoFenceState extends State<GeoFence> {
     return 12742 * asin(sqrt(a));
   }
 
+  void saveSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     startGeofenceService();
+    saveSharedPreferences();
   }
 
   @override
@@ -119,6 +129,7 @@ class _GeoFenceState extends State<GeoFence> {
           radiusCenter: widget.radiusCenter),
     );
   }
+
   @override
   void dispose() {
     // TODO: implement dispose
