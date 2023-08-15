@@ -11,7 +11,9 @@ void main() async {
   );
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setInt('count', 0);
+  if(prefs.getInt('count') != 1){
+    prefs.setInt('count', 0);
+  }
   bool isLoggedIn = prefs.getBool("isLoggedIn") ?? false;
 
   runApp(MyApp(isLoggedIn: isLoggedIn));

@@ -156,14 +156,23 @@ class _GeoFenceState extends State<GeoFence> {
 
   void saveSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
+    print(prefs.getInt('count'));
+  }
+  setColor()async {
+    prefs = await SharedPreferences.getInstance();
+    if (prefs.getInt('count') == 1){
+      setState(() {
+        colour = Colors.orange.shade700;
+      });
+    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    startGeofenceService();
     saveSharedPreferences();
+    setColor();
   }
 
   @override
