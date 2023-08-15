@@ -270,24 +270,19 @@ class _AdminCalenderState extends State<AdminCalender> {
             ),
           ))
         : Expanded(
-            child: FirebaseAnimatedList(
-              query: _query,
-              key: _key,
-              itemBuilder: (context, snapshot, animation, index) {
-                String userId = snapshot.value.toString();
-                Object? data = snapshot.value;
-                String userName =
-                    snapshot.child('$index').child('name').value.toString();
-                String userOffice = snapshot
-                    .child('$index')
-                    .child('office_name')
-                    .value
-                    .toString();
-                print(userId);
-                return AttendanceName(
-                    userName: userName, officeName: userOffice);
-              },
-            ),
-          );
+
+      child: FirebaseAnimatedList(
+        query: _query,
+        key: _key,
+        itemBuilder: (context, snapshot, animation, index) {
+          String userId = snapshot.value.toString();
+          Object? data = snapshot.value;
+          String userName = snapshot.child('$index').child('name').value.toString();
+          String userOffice = snapshot.child('$index').child('office_name').value.toString();
+          print(userId);
+          return AttendanceName(userName: userName , officeName: userOffice);
+        },
+      ),
+    );
   }
 }
