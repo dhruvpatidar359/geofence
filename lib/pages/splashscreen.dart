@@ -19,7 +19,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return EasySplashScreen(
-      logo: Image.asset('assets/images/logo.png'),
+      logo: Image.asset('assets/images/geofence_icon.jpg'),
       title: Text(
         "GeoFence",
         style: TextStyle(
