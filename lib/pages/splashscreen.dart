@@ -4,8 +4,6 @@ import 'package:geofence/pages/login.dart';
 
 import 'package:flutter/material.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 class SplashPage extends StatefulWidget {
   SplashPage({Key? key, required this.isLoggedIn}) : super(key: key);
 
