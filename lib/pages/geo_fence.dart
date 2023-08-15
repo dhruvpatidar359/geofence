@@ -31,37 +31,48 @@ class GeoFence extends StatefulWidget {
 }
 
 class _GeoFenceState extends State<GeoFence> {
-  StreamSubscription<Position>? _positionStream;
+  // StreamSubscription<Position>? _positionStream;
   FirebaseServices firebaseServices = FirebaseServices();
   DatabaseReference userRef = FirebaseDatabase.instance.ref("user");
   late SharedPreferences prefs;
+  Color colour = Colors.orange.shade100;
+  // LocationSettings _locationSet = LocationSettings(
+  //   accuracy: LocationAccuracy.bestForNavigation,
+  //   distanceFilter: 1,
+  //   timeLimit: Duration(seconds: 10000),
+  // );
 
-  LocationSettings _locationSet = LocationSettings(
-    accuracy: LocationAccuracy.bestForNavigation,
-    distanceFilter: 1,
-    timeLimit: Duration(seconds: 10000),
-  );
-
-  void startGeofenceService() {
+  // To stop the attendance
+    void startGeofenceService() async {
     //parsing the values to double if in any case they are coming in int etc
     double latitude = widget.latitudeCenter;
     double longitude = widget.longitudeCenter;
     double radiusInMeter = widget.radiusCenter;
     int? eventPeriodInSeconds = 1;
 
-    if (_positionStream == null) {
-      _positionStream = Geolocator.getPositionStream(
-        locationSettings: _locationSet,
-      ).listen((Position position) {
-        double distanceInMeters = Geolocator.distanceBetween(
-            latitude, longitude, position.latitude, position.longitude);
-        try {
-          _checkGeofence(distanceInMeters, radiusInMeter);
-        } catch (e) {}
-      });
+    // if (_positionStream == null) {
+    //   _positionStream = Geolocator.getPositionStream(
+    //     locationSettings: _locationSet,
+    //   ).listen((Position position) {
+    //     double distanceInMeters = Geolocator.distanceBetween(
+    //         latitude, longitude, position.latitude, position.longitude);
+    //     try {
+    //       _checkGeofence(distanceInMeters, radiusInMeter);
+    //     } catch (e) {}
+    //   });
+    // }
+    // _positionStream!
+    //     .pause(Future.delayed(Duration(seconds: eventPeriodInSeconds!)));
+
+    Position currentPosition =  await Geolocator.getCurrentPosition(
+      timeLimit: Duration(seconds: 5),
+      desiredAccuracy: LocationAccuracy.bestForNavigation,
+    );
+
+    if(currentPosition != null){
+      double distanceInMeters = Geolocator.distanceBetween(latitude, longitude, currentPosition.latitude, currentPosition.longitude);
+      _checkGeofence(distanceInMeters, radiusInMeter);
     }
-    _positionStream!
-        .pause(Future.delayed(Duration(seconds: eventPeriodInSeconds!)));
   }
 
   void _checkGeofence(double distanceInMeters, double radiusInMeter) async {
@@ -80,23 +91,57 @@ class _GeoFenceState extends State<GeoFence> {
         showTopSnackBar(
           Overlay.of(context),
           const CustomSnackBar.success(
-            message: "You have Entered the Location",
+            message: "Your attendance is started",
           ),
         );
+        setState(() {
+          colour = Colors.orange.shade700;
+        });
       }
-    } else {
-      print("EXIT");
-      if (prefs.getInt('count') == 1) {
-        prefs.setInt('count', 0);
-        firebaseServices.markAttendanceExit(
-            uId: FirebaseAuth.instance.currentUser!.uid);
+      else{
         showTopSnackBar(
           Overlay.of(context),
-          const CustomSnackBar.error(
-            message: "You are outside the Location",
+          const CustomSnackBar.success(
+            message: "Your attendance is already started",
           ),
         );
+        setState(() {
+         colour = Colors.orange.shade700;
+        });
       }
+    }
+    else{
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.error(
+          message: "You are outside the area",
+        ),
+      );
+    }
+  }
+  // To stop the attendance
+  void endGeoFenceService(){
+    if (prefs.getInt('count') == 1) {
+      prefs.setInt('count', 0);
+      firebaseServices.markAttendanceExit(
+          uId: FirebaseAuth.instance.currentUser!.uid);
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.error(
+          message: "Your attendance is stopped",
+        ),
+      );
+      setState(() {
+        colour = Colors.orange.shade100;
+      });
+    }
+    else{
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.error(
+          message: "Your attendance is already stopped",
+        ),
+      );
     }
   }
 
@@ -124,10 +169,62 @@ class _GeoFenceState extends State<GeoFence> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GoogleMapPage(
-          latitudeCenter: widget.latitudeCenter,
-          longitudeCenter: widget.longitudeCenter,
-          radiusCenter: widget.radiusCenter),
+      child:
+      Stack(
+        children: [
+          GoogleMapPage(
+              latitudeCenter: widget.latitudeCenter,
+              longitudeCenter: widget.longitudeCenter,
+              radiusCenter: widget.radiusCenter),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height/15,
+            left: MediaQuery.of(context).size.width/5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    startGeofenceService();
+                  },
+                  child: Container(
+                    child: Text(
+                      'Entry',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: colour,
+                  ),
+                ),
+                SizedBox(width: 10,),
+                ElevatedButton(
+                    onPressed: () {
+                      endGeoFenceService();
+                    },
+                    child: Container(
+                      child: Text(
+                        'Exit',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange.shade100,
+                    )
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

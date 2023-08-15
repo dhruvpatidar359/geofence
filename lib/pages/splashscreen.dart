@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
     return EasySplashScreen(
       logo: Image.asset('assets/images/logo.png'),
       title: Text(
-        "GeoFlix",
+        "GeoFence",
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geofence/pages/geo_fence.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -85,63 +86,71 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     }
 
     StreamSubscription<Position> positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSetting)
-            .listen((Position? positionNew) {
+    Geolocator.getPositionStream(locationSettings: locationSetting)
+        .listen((Position? positionNew) {
       print(positionNew == null
           ? 'Unknown'
-          : '${positionNew.latitude.toString()}, ${positionNew.longitude.toString()}');
-      // if (position != null && mounted) {
-      //   setState(() {
-      //     currentPosition = positionNew;
-      //   });
-      try {
-        if (position != null) {
-          setState(() {
-            currentPosition = positionNew;
-          });
-        }
-      } catch (e) {}
+          : '${positionNew.latitude.toString()}, ${positionNew.longitude
+          .toString()}');
+      if (position != null && mounted) {
+        setState(() {
+          currentPosition = positionNew;
+        });
+        // try {
+        //   if (position != null) {
+        //     setState(() {
+        //       currentPosition = positionNew;
+        //     });
+        //   }
+        // } catch (e) {}
+      }
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: !isReady
-          ? Container(
-              child:
-                  Center(child: CircularProgressIndicator(color: Colors.blue)),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            )
-          : GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                    currentPosition!.latitude, currentPosition!.longitude),
-                zoom: 20,
-              ),
-              markers: {
-                Marker(
-                  markerId: MarkerId("Current Location"),
-                  position: LatLng(
-                      currentPosition!.latitude, currentPosition!.longitude),
-                ),
-              },
-              circles: Set.from(
-                [
-                  Circle(
-                    circleId: CircleId("Center"),
-                    center:
-                        LatLng(widget.latitudeCenter, widget.longitudeCenter),
-                    radius: widget.radiusCenter,
-                    fillColor: Colors.blue.shade200.withOpacity(0.35),
-                    strokeColor: Colors.blue,
-                    strokeWidth: 5,
-                  ),
-                ],
-              ),
-              compassEnabled: true,
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        body: !isReady
+            ? Container(
+          child:
+          Center(child: CircularProgressIndicator(color: Colors.blue)),
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
+        )
+            : GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: LatLng(
+                currentPosition!.latitude, currentPosition!.longitude),
+            zoom: 20,
+          ),
+          markers: {
+            Marker(
+              markerId: MarkerId("Current Location"),
+              position: LatLng(
+                  currentPosition!.latitude, currentPosition!.longitude),
             ),
-    );
+          },
+          circles: Set.from(
+            [
+              Circle(
+                circleId: CircleId("Center"),
+                center:
+                LatLng(widget.latitudeCenter, widget.longitudeCenter),
+                radius: widget.radiusCenter,
+                fillColor: Colors.blue.shade200.withOpacity(0.35),
+                strokeColor: Colors.blue,
+                strokeWidth: 5,
+              ),
+            ],
+          ),
+          compassEnabled: true,
+        ),
+      );
+    }
   }
-}
